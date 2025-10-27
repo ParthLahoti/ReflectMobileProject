@@ -1,19 +1,23 @@
+// src/screens/ConceptsScreen.tsx
+
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import PrimaryButton from '../components/PrimaryButton'; // Import our button
+import PrimaryButton from '../components/PrimaryButton';
+import { StackNavigationProp } from '@react-navigation/stack'; // Import the type
 
-const ConceptsScreen = ({ navigation }) => {
+// This tells TypeScript what our navigation prop looks like
+type ConceptsScreenProps = {
+  navigation: StackNavigationProp<any>; // 'any' is the simplest way to get started
+};
 
+const ConceptsScreen = ({ navigation }: ConceptsScreenProps) => {
   const handlePress = () => {
-    // This tells the navigator to go to the 'Prompt' screen
     navigation.navigate('Prompt');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Get started by selecting from the below concepts.</Text>
-
-      {/* Use the button component */}
       <PrimaryButton title="Go to Prompt Screen" onPress={handlePress} />
     </View>
   );

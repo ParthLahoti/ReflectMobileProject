@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
@@ -95,3 +96,18 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+=======
+# Project Reflect Mobile App
+
+This is a student project to build an AI-powered arts for wellness mobile app.
+
+## Team Members
+- Project Lead: Parth Lahoti
+- Frontend Developer: Pranay Mishra
+- Backend Specialist: Vishantan Singh Parihar
+- QA & Documentation Lead: Lakshya Agrawal
+
+## How to Run This Project
+(We will fill this in later)
+# Challenge-X
+>>>>>>> 183dd8166a57b5dc0292ee8aaf478e816ff951f7

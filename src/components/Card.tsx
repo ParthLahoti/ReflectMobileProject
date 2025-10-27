@@ -1,7 +1,14 @@
+// src/components/Card.tsx
+
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-const Card = ({ children }) => {
+// Define the types for our props
+interface CardProps {
+  children: React.ReactNode;
+}
+
+const Card = ({ children }: CardProps) => {
   return <View style={styles.card}>{children}</View>;
 };
 
