@@ -1,19 +1,110 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+// src/screens/ReflectScreen.tsx
 
-const ReflectScreen = () => {
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView, // Automatically moves UI out of the keyboard's way
+  Platform, // To check if we're on iOS or Android
+} from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+// Define the component's props
+type ReflectScreenProps = {
+  navigation: StackNavigationProp<any>;
+};
+
+// A fake image URL for our placeholder
+const FAKE_SELECTED_IMAGE = 'https://picsum.photos/seed/1/400';
+
+const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
   return (
-    <View style={styles.container}>
-      <Text>Reflect Screen</Text>
-    </View>
+    // KeyboardAvoidingView is a wrapper that prevents the keyboard from covering the text input
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: FAKE_SELECTED_IMAGE }}
+          style={styles.image}
+        />
+        <Text style={styles.imagePrompt}>
+          What sticks out to you most about your artwork?
+        </Text>
+      </View>
+
+      <View style={styles.journalContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="The lion protecting his pride represents an..."
+          placeholderTextColor="#999"
+          multiline={true}
+        />
+        <TouchableOpacity style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>→</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F5F5F5',
+  },
+  imageContainer: {
+    flex: 2, // Takes up 2/3 of the screen
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
+  },
+  image: {
+    width: '100%',
+    height: '70%',
+    borderRadius: 10,
+  },
+  imagePrompt: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  journalContainer: {
+    flex: 1, // Takes up 1/3 of the screen
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#DDD',
+  },
+  textInput: {
+    flex: 1, // Text input takes most of the space
+    fontSize: 16,
+    color: '#333',
+    height: '100%',
+    textAlignVertical: 'top', // Start text from the top
+  },
+  saveButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 });
 
