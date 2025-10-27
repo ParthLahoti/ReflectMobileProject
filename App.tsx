@@ -1,21 +1,21 @@
 // App.tsx
-
-import 'react-native-gesture-handler'; // This MUST be the first line
+import 'react-native-gesture-handler';
 import React from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'; // <-- 1. Import this
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
+import { AppProvider } from './src/context/AppContext'; // <-- 1. Import
 
 export default function App() {
   return (
-    // 2. Wrap your AppNavigator in this component
     <GestureHandlerRootView style={styles.container}>
-      <AppNavigator />
+      <AppProvider> {/* <-- 2. Wrap your Navigator */}
+        <AppNavigator />
+      </AppProvider>
     </GestureHandlerRootView>
   );
 }
 
-// 3. Add this stylesheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,

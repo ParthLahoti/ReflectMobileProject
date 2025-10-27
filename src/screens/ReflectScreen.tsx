@@ -8,22 +8,21 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView, // Automatically moves UI out of the keyboard's way
-  Platform, // To check if we're on iOS or Android
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp } from '@react-navigation/stack'; // <-- 1. Import the type
 
-// Define the component's props
+// vvv 2. This 'type' block fixes the red line on 'navigation' vvv
 type ReflectScreenProps = {
   navigation: StackNavigationProp<any>;
 };
 
-// A fake image URL for our placeholder
 const FAKE_SELECTED_IMAGE = 'https://picsum.photos/seed/1/400';
 
+// vvv 3. We use the type here vvv
 const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
   return (
-    // KeyboardAvoidingView is a wrapper that prevents the keyboard from covering the text input
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
@@ -53,13 +52,14 @@ const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
   );
 };
 
+// ... (styles are the same as the previous message) ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
   },
   imageContainer: {
-    flex: 2, // Takes up 2/3 of the screen
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   journalContainer: {
-    flex: 1, // Takes up 1/3 of the screen
+    flex: 1,
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
     borderTopColor: '#DDD',
   },
   textInput: {
-    flex: 1, // Text input takes most of the space
+    flex: 1,
     fontSize: 16,
     color: '#333',
     height: '100%',
-    textAlignVertical: 'top', // Start text from the top
+    textAlignVertical: 'top',
   },
   saveButton: {
     width: 50,
