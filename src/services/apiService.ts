@@ -1,82 +1,60 @@
 // src/services/apiService.ts
 
-// !!!!!!!!!!!!! IMPORTANT !!!!!!!!!!!!!
-// 1. Go to https://platform.stability.ai/signup to get a free API key.
-// 2. Paste your key here.
-const YOUR_API_KEY_HERE = 'YOUR_API_KEY_HERE';
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// IMPORTANT: Add your Stability AI API key here
+const API_KEY = 'YOUR_API_KEY_GOES_HERE';
 
+// The specific API endpoint we are using
+const API_HOST = 'https://api.stability.ai';
+const ENGINE_ID = 'stable-image-core'; // This is their newest model
 
-// This is the REAL function we will use
-export const generateRealImages = async (prompt: string, style: string) => {
-  if (YOUR_API_KEY_HERE === 'YOUR_API_KEY_HERE') {
-    console.error('API key is not set. Please update apiService.ts');
-    // Return mock data if key isn't set
-    return generateMockImages(prompt); 
-  }
+// Define the shape of the data we expect back from the API
+interface StabilityApiResponse {
+  artifacts: Array<{
+    base64: string;
+    finishReason: string;
+  }>;
+}
 
+export const generateImages = async (
+  prompt: string,
+): Promise<string[]> => {
   console.log(`Generating REAL images for prompt: "${prompt}"`);
 
-  try {
-    const response = await fetch(
-      'https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${YOUR_API_KEY_HERE}`,
-        },
-        body: JSON.stringify({
-          text_prompts: [
-            {
-              text: prompt,
-            },
-          ],
-          cfg_scale: 7,
-          height: 512,
-          width: 512,
-          samples: 4, // Generate 4 images
-          steps: 30,
-          style_preset: style, // Use the style from the app
-        }),
+  // 1. Make the network request to the API
+  const response = await fetch(
+    `${API_HOST}/v1/generation/${ENGINE_ID}/text-to-image`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${API_KEY}`,
       },
-    );
-
-    if (!response.ok) {
-      throw new Error(`Non-200 response: ${await response.text()}`);
-    }
-
-    const data = await response.json();
-    
-    // The API returns images as "base64" strings.
-    // We must format them so the <Image> component can read them.
-    const imageUrls = data.artifacts.map((image: { base64: string }) => {
-      return `data:image/png;base64,${image.base64}`;
-    });
-
-    return imageUrls;
-
-  } catch (error) {
-    console.error('Error generating images:', error);
-    return []; // Return an empty array on failure
-  }
-};
-
-
-// This is the MOCK function for testing
-export const generateMockImages = async (prompt: string) => {
-  console.log(`Generating MOCK images for prompt: "${prompt}"`);
-
-  await new Promise((resolve) =>
-    setTimeout(() => resolve(undefined), 1000),
+      body: JSON.stringify({
+        text_prompts: [{ text: prompt }],
+        cfg_scale: 7,
+        height: 1024,
+        width: 1024,
+        steps: 30,
+        samples: 4, // We want 4 images
+      }),
+    },
   );
 
-  // Return a list of fake image URLs
-  return [
-    `https://picsum.photos/seed/${prompt.length}/400`,
-    `https://picsum.photos/seed/${prompt.length + 1}/400`,
-    `https://picsum.photos/seed/${prompt.length + 2}/400`,
-    `https://picsum.photos/seed/${prompt.length + 3}/400`,
-  ];
+  // 2. Check if the request was successful
+  if (!response.ok) {
+    throw new Error(`Non-200 response: ${await response.text()}`);
+  }
+
+  // 3. Parse the JSON response
+  const data = (await response.json()) as StabilityApiResponse;
+
+  // 4. The images are returned as 'base64' strings. We need to
+  // format them so the <Image> component can read them.
+  const imageUrls = data.artifacts.map((image) => {
+    return `data:image/png;base64,${image.base64}`;
+  });
+
+  console.log('Successfully generated images!');
+  return imageUrls;
 };

@@ -3,25 +3,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native'; // <-- 1. Import RouteProp
 
-// Define the component's props
-type ResponseScreenProps = {
-  navigation: StackNavigationProp<any>;
+// 2. Define the types for our navigation parameters
+type RootStackParamList = {
+  Response: { generatedImages: string[] };
 };
 
-// A list of fake image URLs, just like our mock API
-const FAKE_IMAGES = [
-  'https://picsum.photos/seed/1/400',
-  'https://picsum.photos/seed/2/400',
-  'https://picsum.photos/seed/3/400',
-  'https://picsum.photos/seed/4/400',
-];
+type ResponseScreenRouteProp = RouteProp<RootStackParamList, 'Response'>;
 
-const ResponseScreen = ({ navigation }: ResponseScreenProps) => {
+type ResponseScreenProps = {
+  navigation: StackNavigationProp<any>;
+  route: ResponseScreenRouteProp; // <-- 3. Add the route prop
+};
 
-  const handleImagePress = () => {
-    // In the future, we'll pass the selected image to the Reflect screen.
-    navigation.navigate('Reflect');
+const ResponseScreen = ({ navigation, route }: ResponseScreenProps) => {
+  // 4. Get the real images from the route parameters
+  const { generatedImages } = route.params;
+
+  const handleImagePress = (imageUrl: string) => {
+    // 5. Pass the specific image a user taps to the Reflect screen
+    navigation.navigate('Reflect', { selectedImage: imageUrl });
   };
 
   return (
@@ -29,11 +31,14 @@ const ResponseScreen = ({ navigation }: ResponseScreenProps) => {
       <Text style={styles.headerTitle}>A safe space for emotions</Text>
 
       <View style={styles.gridContainer}>
-        {FAKE_IMAGES.map((imageUrl, index) => (
+        {/* 6. Map over the REAL generatedImages array */}
+        {generatedImages.map((imageUrl, index) => (
           <TouchableOpacity
             key={index}
             style={styles.imageWrapper}
-            onPress={handleImagePress}>
+            onPress={() => handleImagePress(imageUrl)} // <-- Pass the URL
+          >
+            {/* 7. The `uri` is now our base64 data string */}
             <Image source={{ uri: imageUrl }} style={styles.image} />
           </TouchableOpacity>
         ))}
@@ -44,6 +49,7 @@ const ResponseScreen = ({ navigation }: ResponseScreenProps) => {
   );
 };
 
+// ... styles are the same as Week 5 ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -58,14 +64,14 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   gridContainer: {
-    flexDirection: 'row', // Arrange children side-by-side
-    flexWrap: 'wrap',     // Allow items to wrap to the next line
-    justifyContent: 'space-between', // Add space between items
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   imageWrapper: {
-    width: '48%', // Each image takes slightly less than half the width
-    height: 180,  // Fixed height for the images
+    width: '48%',
+    height: 180,
     marginBottom: 10,
   },
   image: {

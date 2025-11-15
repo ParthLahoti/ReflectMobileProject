@@ -1,17 +1,18 @@
 // App.tsx
+
 import 'react-native-gesture-handler';
 import React from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
-import { AppProvider } from './src/context/AppContext'; // <-- 1. Import
+import { PromptProvider } from './src/context/PromptContext'; // <-- 1. IMPORT
 
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <AppProvider> {/* <-- 2. Wrap your Navigator */}
+      <PromptProvider> {/* <-- 2. WRAP YOUR APP */}
         <AppNavigator />
-      </AppProvider>
+      </PromptProvider> {/* <-- 3. WRAP YOUR APP */}
     </GestureHandlerRootView>
   );
 }

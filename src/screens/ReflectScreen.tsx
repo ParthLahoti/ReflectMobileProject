@@ -11,17 +11,34 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack'; // <-- 1. Import the type
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-// vvv 2. This 'type' block fixes the red line on 'navigation' vvv
-type ReflectScreenProps = {
-  navigation: StackNavigationProp<any>;
+// Define the types for our navigation parameters
+type RootStackParamList = {
+  Reflect: { selectedImage: string };
 };
 
-const FAKE_SELECTED_IMAGE = 'https://picsum.photos/seed/1/400';
+type ReflectScreenRouteProp = RouteProp<RootStackParamList, 'Reflect'>;
 
-// vvv 3. We use the type here vvv
-const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
+// Define the component's props
+type ReflectScreenProps = {
+  navigation: StackNavigationProp<any>; // <-- THIS IS THE PROP THAT WAS MISSING
+  route: ReflectScreenRouteProp;
+};
+
+// Ensure both 'navigation' and 'route' are passed in
+const ReflectScreen = ({ navigation, route }: ReflectScreenProps) => {
+  
+  // Get the real selected image from the route
+  const { selectedImage } = route.params;
+
+  // This function now has access to 'navigation'
+  const handleSaveJournal = () => {
+    console.log('Journal Saved!');
+    navigation.navigate('Concepts'); // This will now work
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -29,7 +46,7 @@ const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
       
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: FAKE_SELECTED_IMAGE }}
+          source={{ uri: selectedImage }}
           style={styles.image}
         />
         <Text style={styles.imagePrompt}>
@@ -44,7 +61,7 @@ const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
           placeholderTextColor="#999"
           multiline={true}
         />
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveJournal}>
           <Text style={styles.saveButtonText}>→</Text>
         </TouchableOpacity>
       </View>
@@ -52,7 +69,6 @@ const ReflectScreen = ({ navigation }: ReflectScreenProps) => {
   );
 };
 
-// ... (styles are the same as the previous message) ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
